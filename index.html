@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Admin — Propostas | Bernhoeft</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0b1f4a;
+      --navy-mid: #122560;
+      --blue: #1a5fca;
+      --blue-light: #3b82f6;
+      --blue-soft: #dbeafe;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-soft: #faf3e0;
+      --white: #ffffff;
+      --off-white: #f7f8fc;
+      --gray-100: #f1f4f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-700: #334155;
+      --gray-900: #0f172a;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --amber: #d97706;
+      --amber-soft: #fef3c7;
+      --red: #dc2626;
+      --red-soft: #fee2e2;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --shadow: 0 4px 24px rgba(11,31,74,0.10);
+      --shadow-lg: 0 8px 48px rgba(11,31,74,0.16);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      color: var(--gray-900);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── LOGIN ─── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #login-screen::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+      top: -300px; right: -200px;
+      border-radius: 50%;
+    }
+
+    .login-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-eyebrow {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .login-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+    }
+
+    .login-form { display: flex; flex-direction: column; gap: 18px; }
+
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+
+    .form-label {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      letter-spacing: 0.02em;
+    }
+
+    .form-input {
+      background: var(--off-white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--gray-900);
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(26,95,202,0.12);
+    }
+
+    .login-btn {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .login-btn:hover:not(:disabled) {
+      background: var(--navy-mid);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(11,31,74,0.25);
+    }
+
+    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .login-error {
+      background: var(--red-soft);
+      color: var(--red);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .login-error.show { display: block; }
+
+    /* ─── APP (após login) ─── */
+    #app { display: none; }
+    #app.show { display: block; }
+
+    .topbar {
+      background: var(--navy);
+      color: var(--white);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar-brand {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .topbar-brand span { color: var(--gold-light); }
+
+    .topbar-subtitle {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .logout-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-family: 'Sora', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.18); }
+
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 36px 32px 60px;
+    }
+
+    .page-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .page-subtitle {
+      font-size: 0.92rem;
+      color: var(--gray-500);
+      margin-bottom: 28px;
+    }
+
+    /* ─── KPIs ─── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+
+    .kpi-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gold);
+    }
+
+    .kpi-label {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .kpi-hint { font-size: 0.78rem; color: var(--gray-400); }
+
+    /* ─── Charts row ─── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    .chart-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .chart-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 18px;
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      height: 240px;
+    }
+
+    /* ─── Filtros + tabela ─── */
+    .table-card {
+      background: var(--white);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .table-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .table-filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-input, .filter-select {
+      background: var(--off-white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--gray-900);
+      min-width: 160px;
+    }
+
+    .filter-input:focus, .filter-select:focus {
+      outline: none;
+      border-color: var(--blue);
+    }
+
+    .table-scroll { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    thead {
+      background: var(--off-white);
+    }
+
+    th {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--gray-700);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: background 0.15s ease;
+      cursor: pointer;
+    }
+
+    tbody tr:hover { background: var(--off-white); }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .status-nova { background: var(--blue-soft); color: var(--blue); }
+    .status-analise { background: var(--amber-soft); color: var(--amber); }
+    .status-ganha { background: var(--green-soft); color: var(--green); }
+    .status-perdida { background: var(--red-soft); color: var(--red); }
+
+    .row-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    .btn-icon {
+      background: var(--off-white);
+      border: 1px solid var(--gray-200);
+      color: var(--gray-700);
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.85rem;
+    }
+
+    .btn-icon:hover {
+      background: var(--navy);
+      color: var(--white);
+      border-color: var(--navy);
+    }
+
+    .empty-state {
+      padding: 60px 24px;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.9rem;
+    }
+
+    /* ─── Modal de detalhes ─── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11,31,74,0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 14px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .modal-topbar {
+      background: var(--navy);
+      color: var(--white);
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .modal-topbar-left { flex: 1; min-width: 0; }
+
+    .modal-eyebrow {
+      font-size: 0.7rem;
+      color: var(--gold-light);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .modal-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .modal-close {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover { background: rgba(255,255,255,0.2); }
+
+    .modal-toolbar {
+      padding: 14px 28px;
+      background: var(--off-white);
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .modal-toolbar-left, .modal-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status-select {
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: var(--white);
+      border: 1.5px solid var(--gray-200);
+      color: var(--gray-700);
+      padding: 7px 14px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--navy);
+      color: var(--white);
+      border-color: var(--navy);
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      border: none;
+      color: var(--navy);
+      padding: 8px 16px;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .modal-body { padding: 28px; max-height: 65vh; overflow-y: auto; }
+
+    .modal-section {
+      margin-bottom: 24px;
+    }
+
+    .modal-section-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--gold-soft);
+    }
+
+    .modal-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+    }
+
+    @media (max-width: 640px) {
+      .modal-fields { grid-template-columns: 1fr; }
+    }
+
+    .field-row {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .field-label {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.72rem;
+      color: var(--gray-500);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .field-value {
+      font-size: 0.88rem;
+      color: var(--gray-900);
+      word-break: break-word;
+    }
+
+    .field-value.empty { color: var(--gray-300); font-style: italic; }
+
+    /* Estilo de impressão para gerar PDF via navegador */
+    @media print {
+      body * { visibility: hidden; }
+      .modal, .modal * { visibility: visible; }
+      .modal-close, .modal-toolbar { display: none !important; }
+      .modal {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .modal-body { max-height: none; overflow: visible; }
+      .modal-topbar { background: var(--navy) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .modal-section-title { color: var(--navy) !important; -webkit-print-color-adjust: exact; }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--navy);
+      color: var(--white);
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .loader {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .initial-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: var(--navy);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ CARREGAMENTO INICIAL ═══════════ -->
+<div id="initial-loading" class="initial-loading">
+  <div style="text-align:center;">
+    <div class="loader" style="border-color: rgba(11,31,74,0.15); border-top-color: var(--navy); width:32px; height:32px;"></div>
+    <p style="margin-top:16px;color:var(--gray-500);font-size:0.9rem;">Carregando...</p>
+  </div>
+</div>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div id="login-screen" style="display:none;">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-eyebrow">Portal Administrativo</div>
+      <h1 class="login-title">Bernhoeft</h1>
+      <p class="login-subtitle">Acesso restrito à equipe comercial</p>
+    </div>
+    <form class="login-form" onsubmit="fazerLogin(event)">
+      <div class="form-field">
+        <label class="form-label" for="login-email">E-mail</label>
+        <input type="email" id="login-email" class="form-input" required autocomplete="username" />
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="login-senha">Senha</label>
+        <input type="password" id="login-senha" class="form-input" required autocomplete="current-password" />
+      </div>
+      <div id="login-error" class="login-error"></div>
+      <button type="submit" id="btn-login" class="login-btn">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════ TROCAR SENHA (primeiro acesso) ═══════════ -->
+<div id="change-password-screen" style="display:none;" class="">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);position:relative;overflow:hidden;">
+    <div style="position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,0.12) 0%,transparent 70%);top:-300px;right:-200px;border-radius:50%;"></div>
+    <div class="login-card" style="max-width:480px;position:relative;z-index:2;">
+      <div class="login-header">
+        <div class="login-eyebrow">Primeiro acesso</div>
+        <h1 class="login-title">Troque sua senha</h1>
+        <p class="login-subtitle">Por segurança, defina uma nova senha antes de acessar o portal.</p>
+      </div>
+      <form class="login-form" onsubmit="trocarSenha(event)">
+        <div class="form-field">
+          <label class="form-label" for="cp-atual">Senha atual (a que você acabou de usar)</label>
+          <input type="password" id="cp-atual" class="form-input" required autocomplete="current-password" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="cp-nova">Nova senha (mínimo 8 caracteres)</label>
+          <input type="password" id="cp-nova" class="form-input" required minlength="8" autocomplete="new-password" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="cp-confirmar">Confirmar nova senha</label>
+          <input type="password" id="cp-confirmar" class="form-input" required minlength="8" autocomplete="new-password" />
+        </div>
+        <div id="cp-error" class="login-error"></div>
+        <button type="submit" id="btn-cp" class="login-btn">Alterar senha e entrar</button>
+        <button type="button" onclick="fazerLogout()" style="background:none;border:none;color:var(--gray-500);font-size:0.82rem;cursor:pointer;margin-top:4px;">Cancelar e sair</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
+<div id="app">
+  <header class="topbar">
+    <div>
+      <div class="topbar-brand">Bernhoeft <span>·</span> Admin</div>
+      <div class="topbar-subtitle">Propostas · BER-OP-FO-001-00</div>
+    </div>
+    <div class="topbar-user">
+      <span id="user-email">—</span>
+      <button class="logout-btn" onclick="fazerLogout()">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Visão geral das propostas recebidas e status atual do funil.</p>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total de propostas</div>
+        <div class="kpi-value" id="kpi-total">0</div>
+        <div class="kpi-hint" id="kpi-total-hint">Todas as propostas recebidas</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Este mês</div>
+        <div class="kpi-value" id="kpi-mes">0</div>
+        <div class="kpi-hint" id="kpi-mes-hint">Recebidas em <span id="mes-atual">—</span></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Esta semana</div>
+        <div class="kpi-value" id="kpi-semana">0</div>
+        <div class="kpi-hint">Últimos 7 dias</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Hoje</div>
+        <div class="kpi-value" id="kpi-hoje">0</div>
+        <div class="kpi-hint">Recebidas hoje</div>
+      </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3 class="chart-title">Distribuição por opção tributária</h3>
+        <div class="chart-canvas-wrap"><canvas id="chart-tributacao"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-title">Distribuição por status</h3>
+        <div class="chart-canvas-wrap"><canvas id="chart-status"></canvas></div>
+      </div>
+    </div>
+
+    <div class="charts-grid" style="grid-template-columns: 1fr;">
+      <div class="chart-card">
+        <h3 class="chart-title">Faixa de faturamento das empresas</h3>
+        <div class="chart-canvas-wrap"><canvas id="chart-faturamento"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Tabela de propostas -->
+    <div class="table-card" style="margin-top: 32px;">
+      <div class="table-header">
+        <div class="table-title">Propostas recebidas</div>
+        <div class="table-filters">
+          <input type="text" id="filter-busca" class="filter-input" placeholder="🔍 Buscar por razão social ou CNPJ" />
+          <select id="filter-status" class="filter-select">
+            <option value="">Todos os status</option>
+            <option value="nova">Nova</option>
+            <option value="analise">Em análise</option>
+            <option value="ganha">Ganha</option>
+            <option value="perdida">Perdida</option>
+          </select>
+          <select id="filter-tributacao" class="filter-select">
+            <option value="">Todas as tributações</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Razão Social</th>
+              <th>CNPJ</th>
+              <th>Tributação</th>
+              <th>Faturamento</th>
+              <th>Responsável</th>
+              <th>Status</th>
+              <th style="text-align:right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body"></tbody>
+        </table>
+      </div>
+      <div id="empty-state" class="empty-state" style="display:none;">
+        Nenhuma proposta encontrada com os filtros atuais.
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════ MODAL DE DETALHES ═══════════ -->
+<div id="modal" class="modal-overlay" onclick="fecharModalSeClicouFora(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-topbar">
+      <div class="modal-topbar-left">
+        <div class="modal-eyebrow">Proposta recebida</div>
+        <div class="modal-title" id="modal-empresa">—</div>
+      </div>
+      <button class="modal-close" onclick="fecharModal()">✕</button>
+    </div>
+    <div class="modal-toolbar">
+      <div class="modal-toolbar-left">
+        <label style="font-family:'Sora';font-size:0.75rem;color:var(--gray-500);font-weight:600;">Status:</label>
+        <select id="modal-status" class="status-select" onchange="mudarStatus()">
+          <option value="nova">Nova</option>
+          <option value="analise">Em análise</option>
+          <option value="ganha">Ganha</option>
+          <option value="perdida">Perdida</option>
+        </select>
+      </div>
+      <div class="modal-toolbar-right">
+        <button class="btn-secondary" onclick="baixarJSON()">⬇ JSON</button>
+        <button class="btn-primary" onclick="imprimirPDF()">🖨 Salvar como PDF</button>
+      </div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- ═══════════ FIREBASE ═══════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+  // ═══════════ CONFIG ═══════════
+  const firebaseConfig = {
+    apiKey: "AIzaSyA8Xo1q8S0RqGdNo4ci40yXufw5Wg4i6ow",
+    authDomain: "bernhoeft-propostas-checklist.firebaseapp.com",
+    projectId: "bernhoeft-propostas-checklist",
+    storageBucket: "bernhoeft-propostas-checklist.firebasestorage.app",
+    messagingSenderId: "276763134621",
+    appId: "1:276763134621:web:48684e937559d5e3ada274"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // ═══════════ ESTADO ═══════════
+  let propostas = [];
+  let propostaAtual = null;
+  let chartTrib = null, chartStat = null, chartFat = null;
+
+  // ═══════════ AUTH ═══════════
+  auth.onAuthStateChanged(async user => {
+    document.getElementById('initial-loading').style.display = 'none';
+    if (user) {
+      // Verifica se o usuário precisa trocar a senha (primeiro acesso)
+      try {
+        const docSnap = await db.collection('admin_users').doc(user.uid).get();
+        const precisaTrocar = !docSnap.exists || docSnap.data().precisaTrocarSenha === true;
+
+        if (precisaTrocar) {
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('app').classList.remove('show');
+          document.getElementById('change-password-screen').style.display = 'block';
+          document.getElementById('cp-atual').value = '';
+          document.getElementById('cp-nova').value = '';
+          document.getElementById('cp-confirmar').value = '';
+          return;
+        }
+      } catch (err) {
+        console.error('Erro ao verificar status do usuário:', err);
+      }
+
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('change-password-screen').style.display = 'none';
+      document.getElementById('app').classList.add('show');
+      document.getElementById('user-email').textContent = user.email;
+      carregarPropostas();
+    } else {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('change-password-screen').style.display = 'none';
+      document.getElementById('app').classList.remove('show');
+    }
+  });
+
+  async function fazerLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim();
+    const senha = document.getElementById('login-senha').value;
+    const btn = document.getElementById('btn-login');
+    const errBox = document.getElementById('login-error');
+    errBox.classList.remove('show');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loader"></span>';
+    try {
+      await auth.signInWithEmailAndPassword(email, senha);
+    } catch (err) {
+      let msg = 'Erro ao fazer login.';
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+        msg = 'E-mail ou senha incorretos.';
+      } else if (err.code === 'auth/too-many-requests') {
+        msg = 'Muitas tentativas. Tente novamente em alguns minutos.';
+      } else if (err.code === 'auth/invalid-email') {
+        msg = 'E-mail inválido.';
+      }
+      errBox.textContent = msg;
+      errBox.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+    }
+  }
+
+  function fazerLogout() {
+    if (confirm('Deseja realmente sair?')) auth.signOut();
+  }
+
+  async function trocarSenha(e) {
+    e.preventDefault();
+    const senhaAtual = document.getElementById('cp-atual').value;
+    const nova = document.getElementById('cp-nova').value;
+    const confirmar = document.getElementById('cp-confirmar').value;
+    const btn = document.getElementById('btn-cp');
+    const errBox = document.getElementById('cp-error');
+    errBox.classList.remove('show');
+
+    if (nova !== confirmar) {
+      errBox.textContent = 'A nova senha e a confirmação não coincidem.';
+      errBox.classList.add('show');
+      return;
+    }
+    if (nova.length < 8) {
+      errBox.textContent = 'A nova senha deve ter no mínimo 8 caracteres.';
+      errBox.classList.add('show');
+      return;
+    }
+    if (nova === senhaAtual) {
+      errBox.textContent = 'A nova senha precisa ser diferente da atual.';
+      errBox.classList.add('show');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loader"></span>';
+
+    try {
+      const user = auth.currentUser;
+      // Reautentica com a senha atual (Firebase exige isso pra trocar senha)
+      const cred = firebase.auth.EmailAuthProvider.credential(user.email, senhaAtual);
+      await user.reauthenticateWithCredential(cred);
+      // Troca a senha
+      await user.updatePassword(nova);
+      // Marca no Firestore que o usuário já trocou
+      await db.collection('admin_users').doc(user.uid).set({
+        email: user.email,
+        precisaTrocarSenha: false,
+        senhaTrocadaEm: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+      // Recarrega para entrar no fluxo normal
+      window.location.reload();
+    } catch (err) {
+      console.error('Erro ao trocar senha:', err);
+      let msg = 'Erro ao trocar a senha.';
+      if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        msg = 'Senha atual incorreta.';
+      } else if (err.code === 'auth/weak-password') {
+        msg = 'Senha muito fraca. Use pelo menos 8 caracteres com letras e números.';
+      } else if (err.code === 'auth/requires-recent-login') {
+        msg = 'Sessão expirou. Saia e faça login novamente.';
+      }
+      errBox.textContent = msg;
+      errBox.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Alterar senha e entrar';
+    }
+  }
+
+  // ═══════════ CARREGAR PROPOSTAS ═══════════
+  function carregarPropostas() {
+    db.collection('propostas').orderBy('criadoEm', 'desc').onSnapshot(snap => {
+      propostas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      atualizarKPIs();
+      atualizarGraficos();
+      preencherFiltroTributacao();
+      renderizarTabela();
+    }, err => {
+      console.error('Erro ao ler propostas:', err);
+      mostrarToast('Erro ao carregar propostas: ' + err.message);
+    });
+  }
+
+  // ═══════════ KPIs ═══════════
+  function atualizarKPIs() {
+    const agora = new Date();
+    const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    const inicioSemana = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const inicioDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+
+    const totalMes = propostas.filter(p => getData(p) >= inicioMes).length;
+    const totalSemana = propostas.filter(p => getData(p) >= inicioSemana).length;
+    const totalHoje = propostas.filter(p => getData(p) >= inicioDia).length;
+
+    document.getElementById('kpi-total').textContent = propostas.length;
+    document.getElementById('kpi-mes').textContent = totalMes;
+    document.getElementById('kpi-semana').textContent = totalSemana;
+    document.getElementById('kpi-hoje').textContent = totalHoje;
+    document.getElementById('mes-atual').textContent = agora.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  }
+
+  function getData(p) {
+    if (p.criadoEm && p.criadoEm.toDate) return p.criadoEm.toDate();
+    if (p.data_preenchimento) return new Date(p.data_preenchimento);
+    return new Date(0);
+  }
+
+  // ═══════════ GRÁFICOS ═══════════
+  function contarPor(campo) {
+    const contagem = {};
+    propostas.forEach(p => {
+      const v = (p[campo] || 'Não informado').trim() || 'Não informado';
+      contagem[v] = (contagem[v] || 0) + 1;
+    });
+    return contagem;
+  }
+
+  function contarStatus() {
+    const map = { nova: 0, analise: 0, ganha: 0, perdida: 0 };
+    propostas.forEach(p => {
+      const s = p.status || 'nova';
+      if (map[s] !== undefined) map[s]++;
+    });
+    return map;
+  }
+
+  function faixaFaturamento(valor) {
+    if (!valor) return 'Não informado';
+    const num = Number(String(valor).replace(/[^\d,.-]/g, '').replace(',', '.'));
+    if (isNaN(num) || num === 0) return 'Não informado';
+    if (num < 30000) return 'Até R$ 30 mil';
+    if (num < 100000) return 'R$ 30k a 100k';
+    if (num < 300000) return 'R$ 100k a 300k';
+    if (num < 1000000) return 'R$ 300k a 1M';
+    if (num < 5000000) return 'R$ 1M a 5M';
+    return 'Acima de R$ 5M';
+  }
+
+  function contarFaturamento() {
+    const ordem = ['Não informado', 'Até R$ 30 mil', 'R$ 30k a 100k', 'R$ 100k a 300k', 'R$ 300k a 1M', 'R$ 1M a 5M', 'Acima de R$ 5M'];
+    const contagem = {};
+    ordem.forEach(k => contagem[k] = 0);
+    propostas.forEach(p => {
+      const faixa = faixaFaturamento(p.faturamento_medio);
+      contagem[faixa] = (contagem[faixa] || 0) + 1;
+    });
+    return contagem;
+  }
+
+  function atualizarGraficos() {
+    // Tributação
+    const trib = contarPor('opcao_tributaria');
+    if (chartTrib) chartTrib.destroy();
+    chartTrib = new Chart(document.getElementById('chart-tributacao'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(trib),
+        datasets: [{
+          label: 'Propostas',
+          data: Object.values(trib),
+          backgroundColor: '#1a5fca',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+
+    // Status (doughnut)
+    const stat = contarStatus();
+    if (chartStat) chartStat.destroy();
+    chartStat = new Chart(document.getElementById('chart-status'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Nova', 'Em análise', 'Ganha', 'Perdida'],
+        datasets: [{
+          data: [stat.nova, stat.analise, stat.ganha, stat.perdida],
+          backgroundColor: ['#1a5fca', '#d97706', '#16a34a', '#dc2626'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'right' } }
+      }
+    });
+
+    // Faturamento
+    const fat = contarFaturamento();
+    if (chartFat) chartFat.destroy();
+    chartFat = new Chart(document.getElementById('chart-faturamento'), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(fat),
+        datasets: [{
+          label: 'Empresas',
+          data: Object.values(fat),
+          backgroundColor: '#c9a84c',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+  }
+
+  // ═══════════ FILTROS + TABELA ═══════════
+  function preencherFiltroTributacao() {
+    const trib = new Set();
+    propostas.forEach(p => { if (p.opcao_tributaria) trib.add(p.opcao_tributaria); });
+    const sel = document.getElementById('filter-tributacao');
+    const atual = sel.value;
+    sel.innerHTML = '<option value="">Todas as tributações</option>';
+    [...trib].sort().forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t; opt.textContent = t;
+      sel.appendChild(opt);
+    });
+    sel.value = atual;
+  }
+
+  function renderizarTabela() {
+    const busca = document.getElementById('filter-busca').value.toLowerCase().trim();
+    const status = document.getElementById('filter-status').value;
+    const trib = document.getElementById('filter-tributacao').value;
+
+    const filtradas = propostas.filter(p => {
+      if (status && (p.status || 'nova') !== status) return false;
+      if (trib && p.opcao_tributaria !== trib) return false;
+      if (busca) {
+        const alvo = ((p.razao_social || '') + ' ' + (p.cnpj_matriz || '') + ' ' + (p.nome_fantasia || '')).toLowerCase();
+        if (!alvo.includes(busca)) return false;
+      }
+      return true;
+    });
+
+    const tbody = document.getElementById('tabela-body');
+    const empty = document.getElementById('empty-state');
+    tbody.innerHTML = '';
+
+    if (filtradas.length === 0) {
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    filtradas.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.onclick = () => abrirModal(p.id);
+      const data = getData(p);
+      const dataStr = data.getTime() > 0 ? data.toLocaleDateString('pt-BR') : '—';
+      const status = p.status || 'nova';
+      const labelStatus = { nova: 'Nova', analise: 'Em análise', ganha: 'Ganha', perdida: 'Perdida' }[status];
+      tr.innerHTML = `
+        <td>${dataStr}</td>
+        <td style="font-weight:600;color:var(--navy);">${escapeHtml(p.razao_social || '—')}</td>
+        <td>${escapeHtml(p.cnpj_matriz || '—')}</td>
+        <td>${escapeHtml(p.opcao_tributaria || '—')}</td>
+        <td>${escapeHtml(p.faturamento_medio || '—')}</td>
+        <td>${escapeHtml(p.responsavel_nome || '—')}</td>
+        <td><span class="status-badge status-${status}">${labelStatus}</span></td>
+        <td>
+          <div class="row-actions" onclick="event.stopPropagation()">
+            <button class="btn-icon" title="Ver detalhes" onclick="abrirModal('${p.id}')">👁</button>
+            <button class="btn-icon" title="Baixar JSON" onclick="baixarJSONDireto('${p.id}')">⬇</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.getElementById('filter-busca').addEventListener('input', renderizarTabela);
+  document.getElementById('filter-status').addEventListener('change', renderizarTabela);
+  document.getElementById('filter-tributacao').addEventListener('change', renderizarTabela);
+
+  // ═══════════ MODAL ═══════════
+  const SECOES = [
+    { titulo: '1 — Informações da Empresa', campos: [
+      ['razao_social', 'Razão Social'],
+      ['nome_fantasia', 'Nome Fantasia'],
+      ['endereco', 'Endereço / CEP'],
+      ['website', 'Website'],
+      ['nire', 'NIRE'],
+      ['cnpj_matriz', 'CNPJ (Matriz)'],
+      ['ie', 'Inscrição Estadual'],
+      ['im', 'Inscrição Municipal'],
+      ['atividades', 'Atividades'],
+      ['possui_filiais', 'Possui Filiais / SCP?'],
+      ['num_empresas_grupo', 'Nº empresas no grupo'],
+      ['cnpj_filiais', 'CNPJ Filiais'],
+      ['ie_filiais', 'IE Filiais'],
+      ['im_filiais', 'IM Filiais'],
+    ]},
+    { titulo: '2 — Setor Específico', campos: [
+      ['emp_andamento', 'Empreendimentos em andamento'],
+      ['emp_finalizados', 'Empreendimentos c/ recebíveis abertos'],
+      ['controle_custos', 'Controle de custos'],
+      ['qtd_produtos', 'Qtd. itens mix de produtos'],
+      ['ncms', 'Principais NCMs'],
+    ]},
+    { titulo: '3 — Área Contábil / Fiscal', campos: [
+      ['declaracoes_dia', 'Declarações acessórias em dia?'],
+      ['declaracoes_atraso', 'Declarações em atraso'],
+      ['opcao_tributaria', 'Opção Tributária'],
+      ['tipo_tributacao', 'Tipo de Tributação'],
+      ['regime_pis_cofins', 'Regime PIS/COFINS'],
+      ['aliquota_pis_cofins', 'Alíquota PIS/COFINS'],
+      ['icms', 'ICMS — Tributação'],
+      ['iss', 'ISS — Tributação'],
+      ['ipi', 'Contribuinte IPI?'],
+      ['incentivos_fiscais', 'Incentivos Fiscais?'],
+      ['incentivos_desc', 'Desc. Incentivos'],
+      ['pendencias_fiscais', 'Pendências Fiscais?'],
+      ['pendencias_desc', 'Desc. Pendências'],
+      ['nf_entrada', 'NF Entrada/mês'],
+      ['nf_saida', 'NF Saída/mês'],
+      ['nf_servicos_tomados', 'NF Serviços Tomados'],
+      ['nf_servicos_prestados', 'NF Serviços Prestados'],
+      ['cfop_entrada', 'CFOPs Entrada'],
+      ['cfop_saida', 'CFOPs Saída'],
+      ['faturamento_medio', 'Faturamento médio mensal'],
+      ['faturamento_expectativa', 'Expectativa faturamento'],
+      ['irpj_presuncao', 'Presunção IRPJ'],
+      ['csll_presuncao', 'Presunção CSLL'],
+    ]},
+    { titulo: '4 — Área Financeira', campos: [
+      ['qtd_contas_correntes', 'Contas correntes'],
+      ['qtd_aplicacoes', 'Contas de aplicação'],
+      ['qtd_pagamentos', 'Pagamentos mensais'],
+      ['periodicidade_pagamentos', 'Periodicidade pagamentos'],
+      ['aprovacao_pagamentos', 'Aprovação de pagamentos'],
+      ['qtd_clientes', 'Qtd. clientes'],
+      ['qtd_fornecedores', 'Qtd. fornecedores'],
+      ['meios_recebimento', 'Meios de recebimento'],
+      ['usa_erp', 'Usa ERP?'],
+      ['erp_nome', 'Qual ERP?'],
+    ]},
+    { titulo: '5 — Departamento Pessoal', campos: [
+      ['qtd_funcionarios', 'Funcionários'],
+      ['admissoes_mes', 'Admissões médias/mês'],
+      ['qtd_estagiarios', 'Estagiários'],
+      ['rescisoes_mes', 'Rescisões médias/mês'],
+      ['qtd_socios', 'Sócios'],
+      ['ferias_3meses', 'Férias (últimos 3 meses)'],
+      ['qtd_autonomos', 'Autônomos'],
+      ['apontamento_frequencia', 'Apontamento de frequência'],
+      ['beneficios', 'Benefícios'],
+      ['beneficios_bernhoeft', 'Benefícios controlados pela Bernhoeft?'],
+      ['sindicato', 'Sindicato / Convenção Coletiva'],
+    ]},
+    { titulo: '6 — Informações Adicionais', campos: [
+      ['gargalo_contabil', 'Gargalo Contábil/Fiscal?'],
+      ['gargalo_contabil_desc', 'Desc. Gargalo Contábil'],
+      ['gargalo_dp', 'Gargalo Depto Pessoal?'],
+      ['gargalo_dp_desc', 'Desc. Gargalo Depto Pessoal'],
+      ['gargalo_financeiro', 'Gargalo Financeiro?'],
+      ['gargalo_financeiro_desc', 'Desc. Gargalo Financeiro'],
+      ['certificado_digital', 'Certificado Digital?'],
+      ['cert_tipo', 'Tipo Certificado'],
+      ['motivo_busca', 'Motivo da busca'],
+      ['observacoes', 'Observações gerais'],
+    ]},
+    { titulo: '7 — Responsável pelo Preenchimento', campos: [
+      ['responsavel_nome', 'Nome'],
+      ['responsavel_funcao', 'Função / Cargo'],
+      ['responsavel_email', 'E-mail'],
+      ['responsavel_telefone', 'Telefone / WhatsApp'],
+      ['data_preenchimento', 'Data de preenchimento'],
+    ]},
+  ];
+
+  function abrirModal(id) {
+    const p = propostas.find(x => x.id === id);
+    if (!p) return;
+    propostaAtual = p;
+
+    document.getElementById('modal-empresa').textContent = p.razao_social || '—';
+    document.getElementById('modal-status').value = p.status || 'nova';
+
+    const body = document.getElementById('modal-body');
+    body.innerHTML = '';
+    SECOES.forEach(secao => {
+      const div = document.createElement('div');
+      div.className = 'modal-section';
+      const camposHtml = secao.campos.map(([key, label]) => {
+        const valor = p[key];
+        const isEmpty = !valor || valor === '';
+        return `
+          <div class="field-row">
+            <div class="field-label">${label}</div>
+            <div class="field-value ${isEmpty ? 'empty' : ''}">${isEmpty ? '—' : escapeHtml(valor)}</div>
+          </div>
+        `;
+      }).join('');
+      div.innerHTML = `
+        <div class="modal-section-title">${secao.titulo}</div>
+        <div class="modal-fields">${camposHtml}</div>
+      `;
+      body.appendChild(div);
+    });
+
+    document.getElementById('modal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharModal() {
+    document.getElementById('modal').classList.remove('show');
+    document.body.style.overflow = '';
+    propostaAtual = null;
+  }
+
+  function fecharModalSeClicouFora(e) {
+    if (e.target.id === 'modal') fecharModal();
+  }
+
+  async function mudarStatus() {
+    if (!propostaAtual) return;
+    const novo = document.getElementById('modal-status').value;
+    try {
+      await db.collection('propostas').doc(propostaAtual.id).update({ status: novo });
+      mostrarToast('Status atualizado ✓');
+    } catch (err) {
+      console.error(err);
+      mostrarToast('Erro ao atualizar status');
+    }
+  }
+
+  // ═══════════ DOWNLOAD ═══════════
+  function baixarJSON() {
+    if (!propostaAtual) return;
+    baixarJSONDireto(propostaAtual.id);
+  }
+
+  function baixarJSONDireto(id) {
+    const p = propostas.find(x => x.id === id);
+    if (!p) return;
+    const copia = { ...p };
+    if (copia.criadoEm && copia.criadoEm.toDate) {
+      copia.criadoEm = copia.criadoEm.toDate().toISOString();
+    }
+    const blob = new Blob([JSON.stringify(copia, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const nome = (p.razao_social || 'proposta').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_');
+    a.href = url;
+    a.download = `proposta_${nome}_${p.id.slice(0, 6)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function imprimirPDF() {
+    window.print();
+  }
+
+  // ═══════════ HELPERS ═══════════
+  function escapeHtml(txt) {
+    if (txt == null) return '';
+    return String(txt).replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+  }
+
+  function mostrarToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ESC para fechar modal
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') fecharModal();
+  });
+</script>
+
+</body>
+</html>
